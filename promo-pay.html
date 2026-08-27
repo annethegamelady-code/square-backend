@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IGAA Promo Payment</title>
+
+  <!-- Square Web Payments SDK -->
+  <script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #card-container {
+      margin-bottom: 20px;
+    }
+    #pay-button {
+      background-color: #0078ff;
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #pay-button:hover {
+      background-color: #005fcc;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>IGAA Promo – Secure Payment</h2>
+
+  <div id="card-container"></div>
+
+  <button id="pay-button">Pay S&H $8.95</button>
+
+  <script>
+    async function initializeSquare() {
+      const payments = Square.payments(
+        "sq0idp-sStFNqn47N7xBRm9uI77Ig",   // Application ID
+        "LG0D6QT8GS6TT"                   // Location ID
+      );
+
+      const card = await payments.card();
+      await card.attach("#card-container");
+
+      document.getElementById("pay-button").addEventListener("click", async () => {
+        try {
+          const result = await card.tokenize();
+          if (result.status === "OK") {
+            const token = result.token;
+
+            const response = await fetch("https://square-backend-1xsy.onrender.com/pay", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: token, amount: 895 })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              alert("Payment successful! Thank you.");
+            } else {
+              alert("Payment failed: " + data.message);
+            }
+          } else {
+            alert("Card tokenization failed.");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Payment error occurred.");
+        }
+      });
+    }
+
+    initializeSquare();
+  </script>
+</body>
+</html>

@@ -4,6 +4,11 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
+// ⭐ PLACE THIS EXACTLY HERE ⭐
+app.get("/promo-pay", (req, res) => {
+  res.sendFile(__dirname + "/promo-pay.html");
+});
+
 app.post("/pay", async (req, res) => {
   const { source_id, amount } = req.body;
 
@@ -30,3 +35,4 @@ app.post("/pay", async (req, res) => {
 app.listen(3000, () => {
   console.log("Backend running on port 3000");
 });
+
