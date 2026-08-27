@@ -18,7 +18,7 @@ app.get("/promo-pay", (req, res) => {
 app.post("/pay", async (req, res) => {
   const { source_id, amount } = req.body;
 
-  const response = await fetch("https://connect.squareupsandbox.com/v2/payments", {
+  const response = await fetch("https://connect.squareup.com/v2/payments", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
