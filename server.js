@@ -1,12 +1,18 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import express from "express";
 import fetch from "node-fetch";
 
 const app = express();
 app.use(express.json());
 
-// ⭐ PLACE THIS EXACTLY HERE ⭐
+// ⭐ FIXED LINE BELOW ⭐
 app.get("/promo-pay", (req, res) => {
-  res.sendFile(__dirname + "/promo-pay.html");
+  res.sendFile(path.join(__dirname, "promo-pay.html"));
 });
 
 app.post("/pay", async (req, res) => {
@@ -35,4 +41,3 @@ app.post("/pay", async (req, res) => {
 app.listen(3000, () => {
   console.log("Backend running on port 3000");
 });
-
